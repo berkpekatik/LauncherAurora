@@ -120,7 +120,7 @@ namespace AuroraServerClient
 
         private void connect_Click(object sender, EventArgs e)
         {
-            if (!PingHost(Main.model.Ip))
+            if (!PingHost(Main.model.Ip, int.Parse(Main.model.Port)))
             {
                 notif.BalloonTipText = "Sunucu Çevrimdışı";
                 notif.ShowBalloonTip(1500);
@@ -184,12 +184,12 @@ namespace AuroraServerClient
             }
         }
 
-        public static bool PingHost(string nameOrAddress)
+        public static bool PingHost(string nameOrAddress, int Port)
         {
             try
             {
                 Ping myPing = new Ping();
-                PingReply reply = myPing.Send(nameOrAddress, 30120);
+                PingReply reply = myPing.Send(nameOrAddress, Port);
                 if (reply != null)
                 {
                     return true;
@@ -197,7 +197,6 @@ namespace AuroraServerClient
             }
             catch
             {
-                Console.WriteLine("ERROR: You have Some TIMEOUT issue");
                 return false;
             }
             return false;
