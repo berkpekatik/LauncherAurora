@@ -17,7 +17,7 @@ namespace AuroraServerClient
 
         double fade = 0.03;
         bool anim = false, stopAnim = false;
-        private string programJsonFile = "http://serverinformationaurora.000webhostapp.com/program.json";
+        private string programJsonFile = "http://fivemsunucum.com/aurora/program.json";
         public static ProgramModel model;
         public static List<PlayersModel> players;
         public static string version = "0.0.1";
@@ -74,15 +74,23 @@ namespace AuroraServerClient
 
         public static List<PlayersModel> getPlayerList()
         {
-            var resultPlayer = string.Empty;
-            using (var webClient = new System.Net.WebClient())
+            try
             {
-                resultPlayer = webClient.DownloadString("http://" + model.Ip + ":" + model.Port + "/players.json");
-            }
+                var resultPlayer = string.Empty;
+                using (var webClient = new System.Net.WebClient())
+                {
+                    resultPlayer = webClient.DownloadString("http://" + model.Ip + ":" + model.Port + "/players.json");
+                }
 
-            JavaScriptSerializer jsonSerializer = new JavaScriptSerializer();
-            players = jsonSerializer.Deserialize<List<PlayersModel>>(resultPlayer);
-            return players;
+                JavaScriptSerializer jsonSerializer = new JavaScriptSerializer();
+                players = jsonSerializer.Deserialize<List<PlayersModel>>(resultPlayer);
+                return players;
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Oyuncu Listesi Alınamadı");
+                return players;
+            }
         }
         private void animation_Tick(object sender, EventArgs e)
         {

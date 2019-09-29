@@ -6,6 +6,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -49,6 +50,11 @@ namespace AuroraServerClient
 
         private void timer1_Tick(object sender, EventArgs e)
         {
+            if (Main.players == null)
+            {
+                return;
+            }
+
             players.Value += 1;
             if (players.Value == Main.players.Count)
             {
@@ -114,6 +120,13 @@ namespace AuroraServerClient
 
         private void connect_Click(object sender, EventArgs e)
         {
+            if (!PingHost(Main.model.Ip))
+            {
+                notif.BalloonTipText = "Sunucu Çevrimdışı";
+                notif.ShowBalloonTip(1500);
+                return;
+            }
+
             if (controlFivem())
             {
                 Process.Start("fivem://connect/" + Main.model.Ip + ":" + Main.model.Port);
@@ -169,6 +182,25 @@ namespace AuroraServerClient
                     Application.Exit();
                 }
             }
+        }
+
+        public static bool PingHost(string nameOrAddress)
+        {
+            try
+            {
+                Ping myPing = new Ping();
+                PingReply reply = myPing.Send(nameOrAddress, 30120);
+                if (reply != null)
+                {
+                    return true;
+                }
+            }
+            catch
+            {
+                Console.WriteLine("ERROR: You have Some TIMEOUT issue");
+                return false;
+            }
+            return false;
         }
     }
 }
